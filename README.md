@@ -35,7 +35,23 @@ The application uses a **Google-style navigation** pattern with:
 - Default search preset to Phoenix, AZ for quick testing
 - View recent search history (last 5 searches)
 
-### 2. Property Lookup
+### 2. Property List
+- Browse paginated property results (50 properties per page)
+- Search for properties by city and state
+- Click on any property to view detailed information in a modal
+- Navigate through large datasets with Previous/Next pagination controls
+- View comprehensive property details including:
+  - Address, general info, building, and lot details
+  - Valuation, assessment, and tax information
+  - Owner and sale information
+  - Legal details and property IDs
+  - MLS/Listing data (if available)
+  - Demographics information
+- **JSON Viewer** - View and copy request payload and API response
+  - Toggle to show/hide JSON data
+  - One-click copy to clipboard
+
+### 3. Property Lookup
 - Lookup individual property details using either:
   - **Address** (street, city, state, ZIP)
   - **APN** (Assessor's Parcel Number with state and county)
@@ -51,7 +67,7 @@ The application uses a **Google-style navigation** pattern with:
   - Toggle to show/hide JSON data
   - One-click copy to clipboard
 
-### 3. Skip Trace
+### 4. Skip Trace
 - Find contact information for property owners using either:
   - **Address** (street, city, state, ZIP)
   - **APN** (Assessor's Parcel Number with state and county)
@@ -79,7 +95,7 @@ The application uses a **Google-style navigation** pattern with:
 
 1. Navigate to the project directory:
 ```bash
-cd "BatchData API Explorer"
+cd BatchData-API-Explorer
 ```
 
 2. Install dependencies:
@@ -129,6 +145,7 @@ npm run preview
 - On mobile, tap the menu icon to access navigation
 - Currently available:
   - **Property Count Search**
+  - **Property List**
   - **Property Lookup**
   - **Skip Trace**
 
@@ -150,6 +167,26 @@ npm run preview
    - Copy request payload or response to clipboard with one click
    - Useful for debugging and understanding the API structure
 7. Click "View API Documentation" at the bottom to see full API docs
+
+### Property List
+1. The app defaults to "Phoenix, AZ" for quick testing
+2. Enter a different city name or select a different state if desired
+3. Click "Search Properties"
+4. View the results:
+   - **Property table** with addresses (50 properties per page)
+   - **Pagination controls** showing current page and total count
+   - Click any property row to open detailed modal view
+5. **Navigate between pages**:
+   - Use Previous/Next buttons to browse through results
+   - Page indicator shows current page and total pages
+6. **View property details**:
+   - Click any property to open detailed modal
+   - View all available property information organized by category
+   - Close modal to return to the list
+7. **Optional: View API details**
+   - Click "View Request & Response JSON" to see the raw API data
+   - Copy request payload or response to clipboard with one click
+8. Click "View API Documentation" at the bottom to see full API docs
 
 ### Property Lookup
 1. Choose lookup method:
@@ -248,10 +285,11 @@ Returns: Vacant properties with high equity that are owned by either out-of-stat
 ## Project Structure
 
 ```
-BatchData API Explorer/
+BatchData-API-Explorer/
 ├── src/
 │   ├── pages/
 │   │   ├── PropertySearchPage.jsx    # Property Count Search feature
+│   │   ├── PropertyListPage.jsx      # Property List feature
 │   │   ├── PropertyLookupPage.jsx    # Property Lookup feature
 │   │   └── SkipTracePage.jsx         # Skip Trace feature
 │   ├── main.jsx                       # App entry point
