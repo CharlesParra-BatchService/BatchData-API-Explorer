@@ -1,0 +1,470 @@
+import React, { useState } from 'react';
+import { Search, MapPin, Loader2, AlertCircle, Code, Copy, Check } from 'lucide-react';
+
+const PropertySearchPage = ({ apiToken }) => {
+  const [city, setCity] = useState('Phoenix');
+  const [state, setState] = useState('AZ');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [result, setResult] = useState(null);
+  const [quicklistCounts, setQuicklistCounts] = useState(null);
+  const [searchHistory, setSearchHistory] = useState([]);
+  const [andQuicklists, setAndQuicklists] = useState([]);
+  const [orQuicklists, setOrQuicklists] = useState([]);
+  const [showJsonViewer, setShowJsonViewer] = useState(false);
+  const [requestPayload, setRequestPayload] = useState(null);
+  const [apiResponse, setApiResponse] = useState(null);
+  const [copiedRequest, setCopiedRequest] = useState(false);
+  const [copiedResponse, setCopiedResponse] = useState(false);
+
+  const API_URL = 'https://api.batchdata.com/api/v1/property/search';
+
+  const availableQuicklists = [
+    'absentee-owner', 'active-auction', 'active-listing', 'canceled-listing',
+    'cash-buyer', 'corporate-owned', 'expired-listing', 'failed-listing',
+    'fix-and-flip', 'free-and-clear', 'for-sale-by-owner', 'has-hoa',
+    'has-hoa-fees', 'high-equity', 'inherited', 'involuntary-lien',
+    'in-state-absentee-owner', 'listed-below-market-price', 'low-equity',
+    'mailing-address-vacant', 'notice-of-default', 'notice-of-lis-pendens',
+    'notice-of-sale', 'on-market', 'out-of-state-absentee-owner',
+    'out-of-state-owner', 'owner-occupied', 'pending-listing', 'preforeclosure',
+    'recently-sold', 'same-property-and-mailing-address', 'tax-default',
+    'tired-landlord', 'unknown-equity', 'vacant', 'vacant-lot'
+  ];
+
+  const handleSearch = async (e) => {
+    e.preventDefault();
+
+    if (!city.trim() || !state.trim()) {
+      setError('Please enter both city and state');
+      return;
+    }
+
+    setLoading(true);
+    setError('');
+    setResult(null);
+    setQuicklistCounts(null);
+
+    const searchQuery = `${city.trim()}, ${state.trim()}`;
+
+    const requestBody = {
+      searchCriteria: {
+        query: searchQuery
+      },
+      options: {
+        skip: 0,
+        take: 0,
+        quicklistCounts: true
+      }
+    };
+
+    if (andQuicklists.length > 0) {
+      requestBody.searchCriteria.quickLists = andQuicklists;
+    }
+    if (orQuicklists.length > 0) {
+      requestBody.searchCriteria.orQuickLists = orQuicklists;
+    }
+
+    try {
+      console.log('Sending request:', requestBody);
+
+      setRequestPayload(requestBody);
+
+      const response = await fetch(API_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${apiToken}`
+        },
+        body: JSON.stringify(requestBody)
+      });
+
+      const data = await response.json();
+      console.log('API Response:', data);
+
+      setApiResponse(data);
+
+      if (!response.ok) {
+        const errorMessage = data.status?.message || data.message || `API request failed with status ${response.status}`;
+        throw new Error(errorMessage);
+      }
+
+      if (data.results?.meta?.results?.resultsFound !== undefined) {
+        const propertyCount = data.results.meta.results.resultsFound;
+
+        const searchResult = {
+          city: city.trim(),
+          state: state.trim().toUpperCase(),
+          count: propertyCount,
+          timestamp: new Date().toLocaleString()
+        };
+
+        setResult(searchResult);
+
+        if (data.results?.quicklistCounts) {
+          setQuicklistCounts(data.results.quicklistCounts);
+        }
+
+        setSearchHistory(prev => [searchResult, ...prev.slice(0, 4)]);
+      } else {
+        console.error('Unexpected response structure:', data);
+        throw new Error('Unexpected response format from API. Check console for details.');
+      }
+    } catch (err) {
+      setError(`Error: ${err.message}`);
+      console.error('Search error:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const statesList = [
+    'AL', 'AK', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 'FL', 'GA',
+    'HI', 'ID', 'IL', 'IN', 'IA', 'KS', 'KY', 'LA', 'ME', 'MD',
+    'MA', 'MI', 'MN', 'MS', 'MO', 'MT', 'NE', 'NV', 'NH', 'NJ',
+    'NM', 'NY', 'NC', 'ND', 'OH', 'OK', 'OR', 'PA', 'RI', 'SC',
+    'SD', 'TN', 'TX', 'UT', 'VT', 'VA', 'WA', 'WV', 'WI', 'WY'
+  ];
+
+  const formatNumber = (num) => {
+    return new Intl.NumberFormat('en-US').format(num);
+  };
+
+  const formatQuicklistName = (name) => {
+    return name.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+  };
+
+  const toggleAndQuicklist = (quicklist) => {
+    setAndQuicklists(prev =>
+      prev.includes(quicklist)
+        ? prev.filter(q => q !== quicklist)
+        : [...prev, quicklist]
+    );
+  };
+
+  const toggleOrQuicklist = (quicklist) => {
+    setOrQuicklists(prev =>
+      prev.includes(quicklist)
+        ? prev.filter(q => q !== quicklist)
+        : [...prev, quicklist]
+    );
+  };
+
+  const clearAllQuicklists = () => {
+    setAndQuicklists([]);
+    setOrQuicklists([]);
+  };
+
+  const copyToClipboard = async (text, setCopiedState) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopiedState(true);
+      setTimeout(() => setCopiedState(false), 2000);
+    } catch (err) {
+      console.error('Failed to copy:', err);
+    }
+  };
+
+  return (
+    <div className="max-w-6xl mx-auto p-4">
+      {/* Search Form */}
+      <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
+        <form onSubmit={handleSearch}>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <div>
+              <label htmlFor="city" className="block text-sm font-medium text-gray-700 mb-1">
+                City
+              </label>
+              <div className="relative">
+                <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <input
+                  type="text"
+                  id="city"
+                  value={city}
+                  onChange={(e) => setCity(e.target.value)}
+                  placeholder="e.g., Phoenix"
+                  className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  disabled={loading}
+                />
+              </div>
+            </div>
+
+            <div>
+              <label htmlFor="state" className="block text-sm font-medium text-gray-700 mb-1">
+                State
+              </label>
+              <select
+                id="state"
+                value={state}
+                onChange={(e) => setState(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                disabled={loading}
+              >
+                <option value="">Select a state</option>
+                {statesList.map(st => (
+                  <option key={st} value={st}>{st}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+          >
+            {loading ? (
+              <>
+                <Loader2 className="animate-spin mr-2 h-5 w-5" />
+                Searching...
+              </>
+            ) : (
+              <>
+                <Search className="mr-2 h-5 w-5" />
+                Search Properties
+              </>
+            )}
+          </button>
+        </form>
+
+        {error && (
+          <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-md flex items-start">
+            <AlertCircle className="w-5 h-5 text-red-500 mr-2 flex-shrink-0 mt-0.5" />
+            <span className="text-red-700 text-sm">{error}</span>
+          </div>
+        )}
+      </div>
+
+      {/* Quicklist Filters */}
+      <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
+        <div className="flex justify-between items-center mb-4">
+          <h3 className="text-lg font-semibold text-gray-800">Filter by Property Type</h3>
+          {(andQuicklists.length > 0 || orQuicklists.length > 0) && (
+            <button
+              onClick={clearAllQuicklists}
+              className="text-sm text-indigo-600 hover:text-indigo-800"
+            >
+              Clear All
+            </button>
+          )}
+        </div>
+
+        <div className="mb-6">
+          <h4 className="text-sm font-medium text-gray-700 mb-2">
+            Must Match ALL (AND) - {andQuicklists.length} selected
+          </h4>
+          <div className="flex flex-wrap gap-2">
+            {availableQuicklists.map(quicklist => (
+              <button
+                key={quicklist}
+                onClick={() => toggleAndQuicklist(quicklist)}
+                className={`px-3 py-1 text-sm rounded-full transition-colors ${
+                  andQuicklists.includes(quicklist)
+                    ? 'bg-indigo-600 text-white'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
+              >
+                {formatQuicklistName(quicklist)}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div>
+          <h4 className="text-sm font-medium text-gray-700 mb-2">
+            Match ANY (OR) - {orQuicklists.length} selected
+          </h4>
+          <div className="flex flex-wrap gap-2">
+            {availableQuicklists.map(quicklist => (
+              <button
+                key={quicklist}
+                onClick={() => toggleOrQuicklist(quicklist)}
+                className={`px-3 py-1 text-sm rounded-full transition-colors ${
+                  orQuicklists.includes(quicklist)
+                    ? 'bg-purple-600 text-white'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
+              >
+                {formatQuicklistName(quicklist)}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {(andQuicklists.length > 0 || orQuicklists.length > 0) && (
+          <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-md">
+            <p className="text-sm text-blue-800">
+              <strong>Active Filters:</strong>
+              {andQuicklists.length > 0 && (
+                <span className="block mt-1">
+                  AND: {andQuicklists.map(formatQuicklistName).join(', ')}
+                </span>
+              )}
+              {orQuicklists.length > 0 && (
+                <span className="block mt-1">
+                  OR: {orQuicklists.map(formatQuicklistName).join(', ')}
+                </span>
+              )}
+            </p>
+          </div>
+        )}
+      </div>
+
+      {/* Results */}
+      {result && (
+        <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
+          <h2 className="text-2xl font-semibold text-gray-800 mb-4">Search Results</h2>
+          <div className="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-lg p-6 text-white">
+            <div className="text-center">
+              <p className="text-lg opacity-90 mb-2">
+                {result.city}, {result.state}
+              </p>
+              <p className="text-5xl font-bold mb-2">
+                {formatNumber(result.count)}
+              </p>
+              <p className="text-lg opacity-90">
+                Properties Found
+              </p>
+            </div>
+          </div>
+          <p className="text-sm text-gray-500 mt-3 text-center">
+            Search performed at {result.timestamp}
+          </p>
+        </div>
+      )}
+
+      {/* Quicklist Counts */}
+      {quicklistCounts && quicklistCounts.length > 0 && (
+        <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
+          <h2 className="text-2xl font-semibold text-gray-800 mb-4">Property Categories</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+            {quicklistCounts.map((item, index) => (
+              <div key={index} className="p-4 bg-gray-50 rounded-md border border-gray-200 hover:border-indigo-300 transition-colors">
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-gray-600 capitalize">
+                    {item.name.replace(/-/g, ' ')}
+                  </span>
+                  <span className="font-semibold text-indigo-600">
+                    {formatNumber(item.count)}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Search History */}
+      {searchHistory.length > 0 && (
+        <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
+          <h3 className="text-lg font-semibold text-gray-800 mb-3">Recent Searches</h3>
+          <div className="space-y-2">
+            {searchHistory.map((search, index) => (
+              <div key={index} className="flex justify-between items-center p-3 bg-gray-50 rounded-md">
+                <div>
+                  <span className="font-medium text-gray-700">
+                    {search.city}, {search.state}
+                  </span>
+                  <span className="text-sm text-gray-500 ml-2">
+                    ({search.timestamp})
+                  </span>
+                </div>
+                <span className="font-semibold text-indigo-600">
+                  {formatNumber(search.count)} properties
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* JSON Viewer Toggle */}
+      {(requestPayload || apiResponse) && (
+        <div className="mb-6">
+          <button
+            onClick={() => setShowJsonViewer(!showJsonViewer)}
+            className="w-full bg-gray-800 text-white py-2 px-4 rounded-md hover:bg-gray-900 transition duration-200 flex items-center justify-center"
+          >
+            <Code className="mr-2 h-5 w-5" />
+            {showJsonViewer ? 'Hide' : 'View'} Request & Response JSON
+          </button>
+        </div>
+      )}
+
+      {/* JSON Viewer */}
+      {showJsonViewer && (requestPayload || apiResponse) && (
+        <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
+          <h2 className="text-2xl font-semibold text-gray-800 mb-4">API Details</h2>
+
+          {requestPayload && (
+            <div className="mb-6">
+              <div className="flex justify-between items-center mb-2">
+                <h3 className="text-lg font-medium text-gray-700">Request Payload</h3>
+                <button
+                  onClick={() => copyToClipboard(JSON.stringify(requestPayload, null, 2), setCopiedRequest)}
+                  className="flex items-center gap-1 px-3 py-1 text-sm bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors"
+                >
+                  {copiedRequest ? (
+                    <>
+                      <Check className="w-4 h-4" />
+                      Copied!
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="w-4 h-4" />
+                      Copy
+                    </>
+                  )}
+                </button>
+              </div>
+              <pre className="bg-gray-900 text-green-400 p-4 rounded-md overflow-x-auto text-sm">
+                {JSON.stringify(requestPayload, null, 2)}
+              </pre>
+            </div>
+          )}
+
+          {apiResponse && (
+            <div>
+              <div className="flex justify-between items-center mb-2">
+                <h3 className="text-lg font-medium text-gray-700">API Response</h3>
+                <button
+                  onClick={() => copyToClipboard(JSON.stringify(apiResponse, null, 2), setCopiedResponse)}
+                  className="flex items-center gap-1 px-3 py-1 text-sm bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors"
+                >
+                  {copiedResponse ? (
+                    <>
+                      <Check className="w-4 h-4" />
+                      Copied!
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="w-4 h-4" />
+                      Copy
+                    </>
+                  )}
+                </button>
+              </div>
+              <pre className="bg-gray-900 text-green-400 p-4 rounded-md overflow-x-auto text-sm max-h-96">
+                {JSON.stringify(apiResponse, null, 2)}
+              </pre>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* API Documentation Link */}
+      <div className="mt-8 text-center">
+        <a
+          href="https://developer.batchdata.com/docs/batchdata/batchdata-v1/operations/create-a-property-search"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-indigo-600 hover:text-indigo-800 underline text-sm"
+        >
+          View API Documentation
+        </a>
+      </div>
+    </div>
+  );
+};
+
+export default PropertySearchPage;
