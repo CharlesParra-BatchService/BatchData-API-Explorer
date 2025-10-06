@@ -17,6 +17,8 @@ const PropertyListPage = ({ apiToken }) => {
   const [apiResponse, setApiResponse] = useState(null);
   const [copiedRequest, setCopiedRequest] = useState(false);
   const [copiedResponse, setCopiedResponse] = useState(false);
+  const [additionalCriteria, setAdditionalCriteria] = useState('');
+  const [jsonError, setJsonError] = useState('');
 
   const PROPERTIES_PER_PAGE = 50;
 
@@ -42,6 +44,7 @@ const PropertyListPage = ({ apiToken }) => {
     setLoading(true);
     setError('');
     setSelectedProperty(null);
+    setJsonError('');
 
     try {
       const skip = (page - 1) * PROPERTIES_PER_PAGE;
@@ -53,6 +56,21 @@ const PropertyListPage = ({ apiToken }) => {
         skip: skip,
         take: PROPERTIES_PER_PAGE
       };
+
+      // Parse and merge additional JSON criteria
+      if (additionalCriteria.trim()) {
+        try {
+          const jsonToParse = additionalCriteria.trim().startsWith('{')
+            ? additionalCriteria
+            : `{${additionalCriteria}}`;
+          const parsedCriteria = JSON.parse(jsonToParse);
+          Object.assign(requestBody.searchCriteria, parsedCriteria);
+        } catch (err) {
+          setJsonError('Invalid JSON format in additional criteria');
+          setLoading(false);
+          return;
+        }
+      }
 
       setRequestPayload(requestBody);
 
@@ -405,9 +423,32 @@ const PropertyListPage = ({ apiToken }) => {
             </div>
           </div>
 
+          <div className="mt-4">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Additional Search Criteria (JSON)
+            </label>
+            <textarea
+              value={additionalCriteria}
+              onChange={(e) => setAdditionalCriteria(e.target.value)}
+              placeholder='e.g., "building": {"yearBuilt": {"min": 2000}}'
+              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 font-mono text-sm"
+              rows="3"
+              disabled={loading}
+            />
+            <p className="mt-1 text-xs text-gray-500">
+              Enter valid JSON object properties to add to searchCriteria (without outer curly braces)
+            </p>
+          </div>
+
           {error && (
             <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md">
               {error}
+            </div>
+          )}
+
+          {jsonError && (
+            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md mt-2">
+              {jsonError}
             </div>
           )}
         </div>

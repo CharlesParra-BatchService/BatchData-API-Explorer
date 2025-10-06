@@ -16,6 +16,8 @@ const PropertySearchPage = ({ apiToken }) => {
   const [apiResponse, setApiResponse] = useState(null);
   const [copiedRequest, setCopiedRequest] = useState(false);
   const [copiedResponse, setCopiedResponse] = useState(false);
+  const [additionalCriteria, setAdditionalCriteria] = useState('');
+  const [jsonError, setJsonError] = useState('');
 
   const API_URL = 'https://api.batchdata.com/api/v1/property/search';
 
@@ -44,6 +46,7 @@ const PropertySearchPage = ({ apiToken }) => {
     setError('');
     setResult(null);
     setQuicklistCounts(null);
+    setJsonError('');
 
     const searchQuery = `${city.trim()}, ${state.trim()}`;
 
@@ -63,6 +66,21 @@ const PropertySearchPage = ({ apiToken }) => {
     }
     if (orQuicklists.length > 0) {
       requestBody.searchCriteria.orQuickLists = orQuicklists;
+    }
+
+    // Parse and merge additional JSON criteria
+    if (additionalCriteria.trim()) {
+      try {
+        const jsonToParse = additionalCriteria.trim().startsWith('{')
+          ? additionalCriteria
+          : `{${additionalCriteria}}`;
+        const parsedCriteria = JSON.parse(jsonToParse);
+        Object.assign(requestBody.searchCriteria, parsedCriteria);
+      } catch (err) {
+        setJsonError('Invalid JSON format in additional criteria');
+        setLoading(false);
+        return;
+      }
     }
 
     try {
@@ -208,6 +226,24 @@ const PropertySearchPage = ({ apiToken }) => {
             </div>
           </div>
 
+          <div className="mb-4">
+            <label htmlFor="additionalCriteria" className="block text-sm font-medium text-gray-700 mb-1">
+              Additional Search Criteria (JSON)
+            </label>
+            <textarea
+              id="additionalCriteria"
+              value={additionalCriteria}
+              onChange={(e) => setAdditionalCriteria(e.target.value)}
+              placeholder='e.g., "building": {"yearBuilt": {"min": 2000}}'
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 font-mono text-sm"
+              rows="3"
+              disabled={loading}
+            />
+            <p className="mt-1 text-xs text-gray-500">
+              Enter valid JSON object properties to add to searchCriteria (without outer curly braces)
+            </p>
+          </div>
+
           <button
             type="submit"
             disabled={loading}
@@ -231,6 +267,13 @@ const PropertySearchPage = ({ apiToken }) => {
           <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-md flex items-start">
             <AlertCircle className="w-5 h-5 text-red-500 mr-2 flex-shrink-0 mt-0.5" />
             <span className="text-red-700 text-sm">{error}</span>
+          </div>
+        )}
+
+        {jsonError && (
+          <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-md flex items-start">
+            <AlertCircle className="w-5 h-5 text-red-500 mr-2 flex-shrink-0 mt-0.5" />
+            <span className="text-red-700 text-sm">{jsonError}</span>
           </div>
         )}
       </div>
