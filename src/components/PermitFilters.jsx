@@ -212,7 +212,7 @@ const TextFilterField = React.memo(({ label, category, value, operator, onFieldC
 TextFilterField.displayName = 'TextFilterField';
 
 const PermitFilters = ({ filters, onChange }) => {
-  const [isExpanded, setIsExpanded] = useState(true);
+  const [isExpanded, setIsExpanded] = useState(false);
 
   const handleChange = useCallback((category, filterType, value) => {
     onChange(prevFilters => {
@@ -253,23 +253,19 @@ const PermitFilters = ({ filters, onChange }) => {
 
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-6">
-      <div
-        className="flex items-center justify-between cursor-pointer"
-        onClick={() => setIsExpanded(!isExpanded)}
-      >
-        <div className="flex items-center gap-2">
-          <h3 className="text-lg font-semibold text-gray-800">Permit Filters</h3>
+      <div className="flex justify-between items-center mb-4">
+        <button
+          onClick={() => setIsExpanded(!isExpanded)}
+          className="flex items-center gap-2 text-lg font-semibold text-gray-800 hover:text-indigo-600 transition-colors"
+        >
+          {isExpanded ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+          Permit Filters
           {activeFilterCount > 0 && (
-            <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-0.5 rounded-full">
-              {activeFilterCount}
+            <span className="text-sm font-normal text-indigo-600">
+              ({activeFilterCount} active)
             </span>
           )}
-        </div>
-        {isExpanded ? (
-          <ChevronUp className="w-5 h-5 text-gray-500" />
-        ) : (
-          <ChevronDown className="w-5 h-5 text-gray-500" />
-        )}
+        </button>
       </div>
 
       {isExpanded && (

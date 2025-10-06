@@ -48,8 +48,8 @@ const PropertySearchPage = ({ apiToken }) => {
   const [ownerFilters, setOwnerFilters] = useState({});
   const [permitFilters, setPermitFilters] = useState({});
   const [saleFilters, setSaleFilters] = useState({});
-  const [quickFiltersExpanded, setQuickFiltersExpanded] = useState(true);
-  const [assessmentFiltersExpanded, setAssessmentFiltersExpanded] = useState(true);
+  const [quickFiltersExpanded, setQuickFiltersExpanded] = useState(false);
+  const [assessmentFiltersExpanded, setAssessmentFiltersExpanded] = useState(false);
 
   const API_URL = 'https://api.batchdata.com/api/v1/property/search';
 

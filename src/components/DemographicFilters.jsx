@@ -153,7 +153,7 @@ const BooleanFilterField = React.memo(({ label, category, value, onFieldChange }
 BooleanFilterField.displayName = 'BooleanFilterField';
 
 const DemographicFilters = ({ filters, onChange }) => {
-  const [isExpanded, setIsExpanded] = useState(true);
+  const [isExpanded, setIsExpanded] = useState(false);
 
   const handleChange = useCallback((category, field, value) => {
     onChange((prevFilters) => {

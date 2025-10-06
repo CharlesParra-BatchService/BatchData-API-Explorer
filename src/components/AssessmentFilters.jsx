@@ -42,7 +42,7 @@ const FilterField = React.memo(({ label, category, minValue, maxValue, onFieldCh
 FilterField.displayName = 'FilterField';
 
 const AssessmentFilters = ({ filters, onChange }) => {
-  const [isExpanded, setIsExpanded] = useState(true);
+  const [isExpanded, setIsExpanded] = useState(false);
 
   const handleChange = useCallback((category, field, value) => {
     onChange((prevFilters) => {

@@ -133,7 +133,7 @@ const SelectFilterField = React.memo(({ label, category, values = [], options, o
 SelectFilterField.displayName = 'SelectFilterField';
 
 const BuildingFilters = ({ filters, onChange }) => {
-  const [isExpanded, setIsExpanded] = useState(true);
+  const [isExpanded, setIsExpanded] = useState(false);
 
   const handleChange = useCallback((category, field, value) => {
     onChange((prevFilters) => {
