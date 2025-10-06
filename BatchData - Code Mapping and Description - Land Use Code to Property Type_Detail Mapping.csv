@@ -1,0 +1,352 @@
+Order,Land Use Code,Property Type Category,Property Type Detail
+1,A1,Agricultural,Agricultural/Rural
+2,A2,Agricultural,Farm
+3,A3,Agricultural,Ranch
+4,A4,Agricultural,Range Land
+5,A5,Agricultural,"Crop Land, Fields or Row Crops"
+6,A6,Agricultural,Orchard
+7,A7,Agricultural,Vineyard
+8,A8,Agricultural,Poultry Farm
+9,A9,Agricultural,Dairy Farm
+10,A10,Agricultural,Timberland or Forest
+11,A11,Agricultural,Wildlife Refuge
+12,A12,Agricultural,Desert or Barren Land
+13,A13,Agricultural,Pasture or Meadow
+14,A14,Agricultural,Miscellaneous Structures
+15,A15,Agricultural,Grove
+16,A16,Agricultural,Feedlots
+17,A17,Agricultural,Livestock Parcel
+18,A18,Agricultural,Horticulture or Growing Houses
+19,A19,Agricultural,Well Site
+20,A20,Agricultural,Truck Crops
+21,A21,Agricultural,Resevoir or Water Supply
+22,A22,Agricultural,Irrigation or Flood Control
+23,A23,Agricultural,Natural Resources
+24,A24,Agricultural,Rural Improved (Non-Residential)
+25,A25,Agricultural,Cannibis Grow Facility
+26,A26,Agricultural,Crops (In Ground)
+27,A27,Agricultural,Crops (Harvested)
+1,C1,Commercial,General
+2,C2,Commercial,Retail Stores
+3,C3,Commercial,Store (Multi-Story)
+4,C4,Commercial,Store/Office
+5,C5,Commercial,Department Store
+6,C6,Commercial,Department Store (Multi-Story)
+7,C7,Commercial,Grocery or Supermarket
+8,C8,Commercial,Regional Shopping Center or Mall
+9,C9,Commercial,"Community Shopping Center, Plaza or Mini-Mall"
+10,C10,Commercial,"Neighborhood Shopping Center, Strip Mall or Enterprise Zone"
+11,C11,Commercial,Shopping Center Common Area
+12,C12,Commercial,Veterinary Clinic or Animal Hospital
+13,C13,Commercial,Restaurant
+14,C14,Commercial,Fast Food Restaurant or Drive-Through
+15,C15,Commercial,Take-Out Restaurant
+16,C16,Commercial,Bakery
+17,C17,Commercial,Bar or Tavern
+18,C18,Commercial,Liquor Store
+19,C19,Commercial,Convenience Store
+20,C20,Commercial,Convenience Store with Fuel Pump
+21,C21,Commercial,Service Station
+22,C22,Commercial,Service Station with Food Mart
+23,C23,Commercial,Truck Stop
+24,C24,Commercial,Vehicle Rental and Sales
+25,C25,Commercial,Auto Repair or Garage
+26,C26,Commercial,Car Wash
+27,C27,Commercial,Dry Cleaner or Laundry Service
+28,C28,Commercial,Service Shop
+29,C29,Commercial,"Florist, Nursery or Greenhouse"
+30,C30,Commercial,Wholesale Outlet or Discount Store
+31,C31,Commercial,"Retail Printer or Delivery Service (e.g. UPS, Fedex)"
+32,C32,Commercial,Mini-Warehouse or Self-Storage
+33,C33,Commercial,Day Care or Preschool Facility
+34,C34,Commercial,Motel
+35,C35,Commercial,Hotel
+36,C36,Commercial,Parking Garage or Structure
+37,C37,Commercial,Parking Lot
+38,C38,Commercial,Funeral Home or Mortuary
+39,C39,Commercial,Casino
+40,C40,Commercial,Hotel Resort
+41,C41,Commercial,Hotel/Motel
+42,C42,Commercial,Gas Station
+43,C43,Commercial,Retail/Residential (Mixed Use)
+44,C44,Commercial,"Commercial Building, Mail Order Showroom or Commercial Warehouse"
+45,C45,Commercial,Commercial/Office/Residential (Mixed Use)
+46,C46,Commercial,Appliance Store
+47,C47,Commercial,Kennel
+48,C48,Commercial,Laundromat
+49,C49,Commercial,Nightclub or Cocktail Lounge
+50,C50,Commercial,Farm Supply and Equipment (Retail)
+51,C51,Commercial,Home Improvement Center
+52,C52,Commercial,Commercial Condominium (Not Offices)
+53,C53,Commercial,Drug Store or Pharmacy
+54,C54,Commercial,Bed & Breakfast
+55,C55,Commercial,Barber or Hair Salon
+56,C56,Commercial,Roadside Market
+57,C57,Commercial,Automated Car Wash
+58,C58,Commercial,Self-Serve Car Wash
+59,C59,Commercial,Cannibis Dispensary
+60,C60,Commercial,Vacant Land
+61,C61,Commercial,Miscellaneous Commerical Multi-Parcel
+62,C62,Commercial,Miscellaneous Commercial
+63,C63,Commercial,Store or Retail Outlet
+64,C64,Commercial,Pet Boarding and Grooming
+1,E1,Exempt,Full or Partial
+2,E2,Exempt,Native American Lands
+3,E3,Exempt,Institutional (General)
+4,E4,Exempt,"Religious, Church, Worship"
+5,E5,Exempt,Parochial or Private School
+6,E6,Exempt,"College, University or Vocational School"
+7,E7,Exempt,Private Hospital
+9,E9,Exempt,"Retirement, Nursing or Convalescent Home"
+10,E10,Exempt,Children's Home or Orphanage
+11,E11,Exempt,Cemetery
+12,E12,Exempt,Crematorium or Mortuary
+13,E13,Exempt,Charitable or Fraternal Organization
+14,E14,Exempt,"Recreational Non-Taxable (Camps, Boy/Girl Scouts)"
+15,E15,Exempt,Private Utility
+16,E16,Exempt,Governmental or Public Use
+17,E17,Exempt,Military
+18,E18,Exempt,Forest
+19,E19,Exempt,Public School
+20,E20,Exempt,Public College or University
+21,E21,Exempt,Post Office
+22,E22,Exempt,Cultural or Historical
+23,E23,Exempt,Government Administrative Office
+24,E24,Exempt,Emergency
+25,E25,Exempt,Other Exempt Property
+26,E26,Exempt,"City, Municipal, Town or Village Owned"
+27,E27,Exempt,County Owned
+28,E28,Exempt,State Owned
+29,E29,Exempt,Federal Property
+30,E30,Exempt,Public Health Care Facility
+31,E31,Exempt,Community Center
+32,E32,Exempt,Public Utility
+33,E33,Exempt,"Welfare, Social Service or Low Income Housing"
+34,E34,Exempt,"Correctional Facility, Jail, Prison or Insane Asylum"
+35,E35,Exempt,Public Hospital
+36,E36,Exempt,Private Historical
+37,E37,Exempt,Historical Residence
+38,E38,Exempt,Historical Retail
+39,E39,Exempt,Historical Transient Lodging
+40,E40,Exempt,Historical Park or Site
+41,E41,Exempt,Historical District
+42,E42,Exempt,Historical Office
+43,E43,Exempt,Historical Recreation or Entertainment
+44,E44,Exempt,Historical Warehouse
+45,E45,Exempt,Exempt Full or Partial
+46,E46,Exempt,Medical Clinic
+1,I1,Industrial,General
+2,I2,Industrial,Light Manufacturing
+3,I3,Industrial,Light Industrial
+4,I4,Industrial,Warehouse (Industrial)
+5,I5,Industrial,"Storage Yard (open storage, light equipment, material)"
+6,I6,Industrial,Food Packing Plant
+7,I7,Industrial,Light Assembly Facility
+8,I8,Industrial,Food Processing Facility
+9,I9,Industrial,Recycling
+10,I10,Industrial,Communications
+11,I11,Industrial,Condominiums (Industrial)
+12,I12,Industrial,"R&D, Laboratory or Research Facility"
+13,I13,Industrial,Industrial Park
+14,I14,Industrial,Multi-Tenant Industrial Building
+15,I15,Industrial,Marine or Boat Repair Facility
+16,I16,Industrial,Lumber & Wood Product Manufacturing
+17,I17,Industrial,Paper Product Manufacturing
+18,I18,Industrial,Printing and Publishing (Light Industrial)
+19,I19,Industrial,Industrial Loft Building
+20,I20,Industrial,Construction or Contracting Services
+21,I21,Industrial,Common Area (Industrial)
+22,I22,Industrial,Heavy Industrial
+23,I23,Industrial,Transportation
+24,I24,Industrial,Distribution Warehouse
+25,I25,Industrial,Mining Facility
+26,I26,Industrial,"Storage Yard (junk, auto wrecking, salvage)"
+27,I27,Industrial,"Distillery, Brewing or Bottling Facility"
+28,I28,Industrial,Refinery
+29,I29,Industrial,Mill
+30,I30,Industrial,Factory
+31,I31,Industrial,Processing Plant
+32,I32,Industrial,Lumber or Building Materials Yard
+33,I33,Industrial,Shipyard or Boat Storage
+34,I34,Industrial,Slaughterhouse or Stockyard
+35,I35,Industrial,Waste Disposal or Sewage Plant
+36,I36,Industrial,Quarry
+37,I37,Industrial,Heavy Manufacturing
+38,I38,Industrial,Labor Camp
+39,I39,Industrial,Winery
+40,I40,Industrial,Chemical Plant
+41,I41,Industrial,Foundry or Industrial Plant
+42,I42,Industrial,Cannery
+43,I43,Industrial,Bulk Storage Tanks
+44,I44,Industrial,Grain Elevator
+45,I45,Industrial,Dump Site
+46,I46,Industrial,Cold Storage
+47,I47,Industrial,Sugar Refinery
+48,I48,Industrial,Transportation & Communications
+49,I49,Industrial,Airport
+50,I50,Industrial,Railroad
+51,I51,Industrial,Freeway or State Highway
+52,I52,Industrial,"Road, Street or Bridge"
+53,I53,Industrial,Bus Terminal
+54,I54,Industrial,Telephone or Telegraph Facility
+55,I55,Industrial,Radio or TV Station
+56,I56,Industrial,Truck Terminal
+57,I57,Industrial,Cable TV Station
+58,I58,Industrial,Harbor & Marine Transportation
+59,I59,Industrial,Microwave
+60,I60,Industrial,Commercial Auto Transportation
+61,I61,Industrial,Pollution Control
+62,I62,Industrial,Cellular
+63,I63,Industrial,Vacant Land
+64,I64,Industrial,Miscellaneous Industrial
+1,M1,Miscellaneous,General
+2,M2,Miscellaneous,Pipeline or Right-of-Way
+3,M3,Miscellaneous,Rail Right-of-Way and Track
+4,M4,Miscellaneous,Road Right-of-Way
+5,M5,Miscellaneous,Utilities
+6,M6,Miscellaneous,Sub-Surface Rights
+7,M7,Miscellaneous,Surface Rights
+8,M8,Miscellaneous,Leasehold Rights
+9,M9,Miscellaneous,Possessory Interest
+10,M10,Miscellaneous,Petroleum & Gas Wells
+11,M11,Miscellaneous,Water Rights
+12,M12,Miscellaneous,Right-of-Way
+13,M13,Miscellaneous,Easement
+14,M14,Miscellaneous,Homestead
+15,M15,Miscellaneous,Common Area
+16,M16,Miscellaneous,Royalty Interest
+17,M17,Miscellaneous,Working Interest
+18,M18,Miscellaneous,Parcel with Improvements
+19,M19,Miscellaneous,Personal Property
+20,M20,Miscellaneous,Motor Vehicles
+21,M21,Miscellaneous,Recreational Vehicles or Travel Trailers
+22,M22,Miscellaneous,Watercraft
+23,M23,Miscellaneous,Aircraft
+24,M24,Miscellaneous,Business Personal Property
+25,M25,Miscellaneous,Equipment or Supplies
+26,M26,Miscellaneous,Inventory
+27,M27,Miscellaneous,Goods in Transit
+28,M28,Miscellaneous,Livestock
+29,M29,Miscellaneous,Miscellaneous Business Personal Property
+30,M30,Miscellaneous,Structures
+31,M31,Miscellaneous,Structures on Leased Land
+32,M32,Miscellaneous,Miscellaneous Structures
+33,M33,Miscellaneous,Intangible Personal Property
+34,M34,Miscellaneous,Miscellaneous Personal Property
+35,M35,Miscellaneous,Unknown
+36,M36,Miscellaneous,Temporary Structures
+37,M37,Miscellaneous,Spacecraft
+38,M38,Miscellaneous,Railroad Rolling Stock
+39,M39,Miscellaneous,Miscellaneous Vehicles
+1,O1,Office,Commercial Office
+2,O2,Office,Professional Building
+3,O3,Office,Professional Building (Multi-Story)
+4,O4,Office,Office Building (General)
+5,O5,Office,Office Building (Multi-Story)
+6,O6,Office,Dental Building
+7,O7,Office,Medical Building or Clinic
+8,O8,Office,Financial Building or Bank
+9,O9,Office,Condominium Offices
+10,O10,Office,Skyscraper or Highrise (Commercial Offices)
+11,O11,Office,Commerical/Industrial (Mixed Use)
+12,O12,Office,Common Area (Not Shopping Center)
+13,O13,Office,Mobile Commercial Units
+1,L1,Recreational,Recreational/Entertainment
+2,L2,Recreational,Recreation Center
+3,L3,Recreational,Public Swimming Pool
+4,L4,Recreational,"Boat Slips, Marina or Yacht Club"
+5,L5,Recreational,Bowling Alley
+6,L6,Recreational,Arcade (Amusement)
+7,L7,Recreational,Skating Rink or Roller Skating Facility
+8,L8,Recreational,"Club, Lodge or Professional Association"
+9,L9,Recreational,"Museum, Library or Art Gallery"
+10,L10,Recreational,Country Club
+11,L11,Recreational,Stadium
+12,L12,Recreational,Arena or Convention Center
+13,L13,Recreational,Auditorium
+14,L14,Recreational,Driving Range
+15,L15,Recreational,Race Track
+16,L16,Recreational,Gym or Health Spa
+17,L17,Recreational,Dance Hall
+18,L18,Recreational,Riding Stable or Trails
+19,L19,Recreational,Campground or RV Park
+20,L20,Recreational,Fairgrounds
+21,L21,Recreational,Theater
+22,L22,Recreational,Drive-In Theater
+23,L23,Recreational,Amusement Park or Tourist Attraction
+24,L24,Recreational,Pier or Wharf (Recreation)
+25,L25,Recreational,"Fish Camp, Game Club or Target Range"
+26,L26,Recreational,"Outdoor Recreation (Beach, Mountain or Desert)"
+27,L27,Recreational,Pool Hall or Billiar Parlor
+28,L28,Recreational,"Park, Playground or Picnic Area"
+29,L29,Recreational,Golf Course
+30,L30,Recreational,Racquet or Tennis Court
+31,L31,Recreational,Zoo
+32,L32,Recreational,"Go-Cart Track, Miniature Golf or Water Slide"
+33,L33,Recreational,Sports Complex
+1,R1,Residential,General
+2,R2,Residential,Single Family
+3,R3,Residential,Townhouse
+4,R4,Residential,Cluster Home
+5,R5,Residential,Condominium Unit
+6,R6,Residential,Cooperative Unit
+7,R7,Residential,Mobile/Manufactured Home
+8,R8,Residential,Row House
+9,R9,Residential,Rurual/Agricultural Residence
+10,R10,Residential,Planned Unit Development
+11,R11,Residential,Residential Common Area
+12,R12,Residential,Timeshare
+13,R13,Residential,"Seasonal, Cabin, Vacation Residence"
+14,R14,Residential,Bungalow
+15,R15,Residential,Zero Lot Line
+16,R16,Residential,Miscellaneous Residential Improvement
+17,R17,Residential,Module or Prefabricated Homes
+18,R18,Residential,Patio Home
+19,R19,Residential,Garden Home
+20,R20,Residential,Landominium
+21,R21,Residential,Barndominium
+22,R22,Residential,Tiny House
+23,R23,Residential,Residential Income (Multi-Family)
+24,R24,Residential,Duplex
+25,R25,Residential,Triplex
+26,R26,Residential,Quadruplex
+27,R27,Residential,Apartment House (5+ Units)
+28,R28,Residential,Apartment House (100+ Units)
+29,R29,Residential,"Garden Apartment, Court Apartment (5+ Units)"
+30,R30,Residential,Highrise Apartment
+31,R31,Residential,Boarding House or Rooming House
+32,R32,Residential,Mobile Home Park or Trailer Park
+33,R33,Residential,Multi-Family Dwelling
+34,R34,Residential,Fraternity or Sorority House
+35,R35,Residential,Apartments
+36,R36,Residential,Dormitory
+37,R37,Residential,Residential Condominium Development
+38,R38,Residential,Condominium Building
+39,R39,Residential,Cooperative Building
+40,R40,Residential,Residential Parking Garage
+41,R41,Residential,Residential Storage Space
+42,R42,Residential,Single Family Residential (Assumed)
+43,R43,Residential,Vacant Land
+44,R44,Residential,Miscellaneous Residential Improvement
+45,R45,Residential,Accessory Dwelling Unit
+1,V1,Vacant Land,General
+2,V2,Vacant Land,Private Preserve or Open Space
+3,V3,Vacant Land,Institutional
+4,V4,Vacant Land,Government
+5,V5,Vacant Land,Multi-Family
+6,V6,Vacant Land,Rural/Agricultural
+7,V7,Vacant Land,"Waste Land, Marsh or Swamp"
+8,V8,Vacant Land,Recreational
+9,V9,Vacant Land,Water Area (Lakes; River; Shore)
+10,V10,Vacant Land,Unusable Land
+11,V11,Vacant Land,Abandoned or Contaminated Site
+12,V12,Vacant Land,Under Construction
+13,V13,Vacant Land,Destroyed or Uninhabitable Improvement
+14,V14,Vacant Land,Unspecified Improvement
+15,V15,Vacant Land,Exempt
+16,V16,Vacant Land,Special Purpose
+17,V17,Vacant Land,State Board of Equalization - Special Assessments
+18,V18,Vacant Land,Regulating Districts & Assessments
+19,V19,Vacant Land,Redevelopment Agency or Zone
+20,V20,Vacant Land,Centrally Assessed
+21,V21,Vacant Land,Vacant Land

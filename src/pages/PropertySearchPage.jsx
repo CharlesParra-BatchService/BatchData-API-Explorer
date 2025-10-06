@@ -1,5 +1,10 @@
 import React, { useState } from 'react';
-import { Search, MapPin, Loader2, AlertCircle, Code, Copy, Check } from 'lucide-react';
+import { Search, MapPin, Loader2, AlertCircle, Code, Copy, Check, ChevronDown, ChevronUp } from 'lucide-react';
+import AssessmentFilters from '../components/AssessmentFilters';
+import BuildingFilters from '../components/BuildingFilters';
+import DemographicFilters from '../components/DemographicFilters';
+import ForeclosureFilters from '../components/ForeclosureFilters';
+import PropertyClassificationFilters from '../components/PropertyClassificationFilters';
 
 const PropertySearchPage = ({ apiToken }) => {
   const [city, setCity] = useState('Phoenix');
@@ -18,6 +23,15 @@ const PropertySearchPage = ({ apiToken }) => {
   const [copiedResponse, setCopiedResponse] = useState(false);
   const [additionalCriteria, setAdditionalCriteria] = useState('');
   const [jsonError, setJsonError] = useState('');
+  const [assessmentFilters, setAssessmentFilters] = useState({});
+  const [buildingFilters, setBuildingFilters] = useState({});
+  const [demographicFilters, setDemographicFilters] = useState({});
+  const [foreclosureFilters, setForeclosureFilters] = useState({});
+  const [propertyClassificationFilters, setPropertyClassificationFilters] = useState({
+    propertyTypeCategory: { inList: ['Residential'] }
+  });
+  const [quickFiltersExpanded, setQuickFiltersExpanded] = useState(true);
+  const [assessmentFiltersExpanded, setAssessmentFiltersExpanded] = useState(true);
 
   const API_URL = 'https://api.batchdata.com/api/v1/property/search';
 
@@ -66,6 +80,114 @@ const PropertySearchPage = ({ apiToken }) => {
     }
     if (orQuicklists.length > 0) {
       requestBody.searchCriteria.orQuickLists = orQuicklists;
+    }
+
+    // Merge property classification filters (general)
+    if (Object.keys(propertyClassificationFilters).length > 0) {
+      const processedGeneralFilters = {};
+      Object.entries(propertyClassificationFilters).forEach(([category, values]) => {
+        processedGeneralFilters[category] = {};
+
+        // Handle string fields (inList, etc.)
+        if (values.inList !== undefined) {
+          processedGeneralFilters[category].inList = values.inList;
+        }
+      });
+      requestBody.searchCriteria.general = processedGeneralFilters;
+    }
+
+    // Merge building filters and convert numeric values to numbers
+    if (Object.keys(buildingFilters).length > 0) {
+      const processedBuildingFilters = {};
+      Object.entries(buildingFilters).forEach(([category, values]) => {
+        processedBuildingFilters[category] = {};
+
+        // Handle numeric min/max fields
+        if (values.min !== undefined) {
+          processedBuildingFilters[category].min = Number(values.min);
+        }
+        if (values.max !== undefined) {
+          processedBuildingFilters[category].max = Number(values.max);
+        }
+
+        // Handle string fields (inList, etc.)
+        if (values.inList !== undefined) {
+          processedBuildingFilters[category].inList = values.inList;
+        }
+      });
+      requestBody.searchCriteria.building = processedBuildingFilters;
+    }
+
+    // Merge assessment filters and convert to numbers
+    if (Object.keys(assessmentFilters).length > 0) {
+      const numericAssessmentFilters = {};
+      Object.entries(assessmentFilters).forEach(([category, values]) => {
+        numericAssessmentFilters[category] = {};
+        if (values.min !== undefined) {
+          numericAssessmentFilters[category].min = Number(values.min);
+        }
+        if (values.max !== undefined) {
+          numericAssessmentFilters[category].max = Number(values.max);
+        }
+      });
+      requestBody.searchCriteria.assessment = numericAssessmentFilters;
+    }
+
+    // Merge demographic filters and convert numeric values to numbers
+    if (Object.keys(demographicFilters).length > 0) {
+      const processedDemographicFilters = {};
+      Object.entries(demographicFilters).forEach(([category, values]) => {
+        processedDemographicFilters[category] = {};
+
+        // Handle numeric min/max fields
+        if (values.min !== undefined) {
+          processedDemographicFilters[category].min = Number(values.min);
+        }
+        if (values.max !== undefined) {
+          processedDemographicFilters[category].max = Number(values.max);
+        }
+
+        // Handle string fields (inList, etc.)
+        if (values.inList !== undefined) {
+          processedDemographicFilters[category].inList = values.inList;
+        }
+
+        // Handle boolean fields (equals, etc.)
+        if (values.equals !== undefined && typeof values.equals === 'boolean') {
+          processedDemographicFilters[category].equals = values.equals;
+        }
+      });
+      requestBody.searchCriteria.demographics = processedDemographicFilters;
+    }
+
+    // Merge foreclosure filters
+    if (Object.keys(foreclosureFilters).length > 0) {
+      const processedForeclosureFilters = {};
+      Object.entries(foreclosureFilters).forEach(([category, values]) => {
+        processedForeclosureFilters[category] = {};
+
+        // Handle numeric min/max fields
+        if (values.min !== undefined) {
+          processedForeclosureFilters[category].min = Number(values.min);
+        }
+        if (values.max !== undefined) {
+          processedForeclosureFilters[category].max = Number(values.max);
+        }
+
+        // Handle date fields (minDate/maxDate)
+        if (values.minDate !== undefined) {
+          processedForeclosureFilters[category].minDate = values.minDate;
+        }
+        if (values.maxDate !== undefined) {
+          processedForeclosureFilters[category].maxDate = values.maxDate;
+        }
+
+        // Handle string fields (inList, etc.)
+        if (values.inList !== undefined) {
+          processedForeclosureFilters[category].inList = values.inList;
+        }
+      });
+      requestBody.searchCriteria.foreclosure = processedForeclosureFilters;
     }
 
     // Parse and merge additional JSON criteria
@@ -226,7 +348,7 @@ const PropertySearchPage = ({ apiToken }) => {
             </div>
           </div>
 
-          <div className="mb-4">
+          <div>
             <label htmlFor="additionalCriteria" className="block text-sm font-medium text-gray-700 mb-1">
               Additional Search Criteria (JSON)
             </label>
@@ -243,24 +365,6 @@ const PropertySearchPage = ({ apiToken }) => {
               Enter valid JSON object properties to add to searchCriteria (without outer curly braces)
             </p>
           </div>
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
-          >
-            {loading ? (
-              <>
-                <Loader2 className="animate-spin mr-2 h-5 w-5" />
-                Searching...
-              </>
-            ) : (
-              <>
-                <Search className="mr-2 h-5 w-5" />
-                Search Properties
-              </>
-            )}
-          </button>
         </form>
 
         {error && (
@@ -278,10 +382,21 @@ const PropertySearchPage = ({ apiToken }) => {
         )}
       </div>
 
-      {/* Quicklist Filters */}
+      {/* Quick Filters */}
       <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
         <div className="flex justify-between items-center mb-4">
-          <h3 className="text-lg font-semibold text-gray-800">Filter by Property Type</h3>
+          <button
+            onClick={() => setQuickFiltersExpanded(!quickFiltersExpanded)}
+            className="flex items-center gap-2 text-lg font-semibold text-gray-800 hover:text-indigo-600 transition-colors"
+          >
+            {quickFiltersExpanded ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+            Quick Filters
+            {(andQuicklists.length > 0 || orQuicklists.length > 0) && (
+              <span className="text-sm font-normal text-indigo-600">
+                ({andQuicklists.length + orQuicklists.length} active)
+              </span>
+            )}
+          </button>
           {(andQuicklists.length > 0 || orQuicklists.length > 0) && (
             <button
               onClick={clearAllQuicklists}
@@ -292,7 +407,9 @@ const PropertySearchPage = ({ apiToken }) => {
           )}
         </div>
 
-        <div className="mb-6">
+        {quickFiltersExpanded && (
+          <>
+            <div className="mb-6">
           <h4 className="text-sm font-medium text-gray-700 mb-2">
             Must Match ALL (AND) - {andQuicklists.length} selected
           </h4>
@@ -334,23 +451,76 @@ const PropertySearchPage = ({ apiToken }) => {
           </div>
         </div>
 
-        {(andQuicklists.length > 0 || orQuicklists.length > 0) && (
-          <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-md">
-            <p className="text-sm text-blue-800">
-              <strong>Active Filters:</strong>
-              {andQuicklists.length > 0 && (
-                <span className="block mt-1">
-                  AND: {andQuicklists.map(formatQuicklistName).join(', ')}
-                </span>
-              )}
-              {orQuicklists.length > 0 && (
-                <span className="block mt-1">
-                  OR: {orQuicklists.map(formatQuicklistName).join(', ')}
-                </span>
-              )}
-            </p>
-          </div>
+            {(andQuicklists.length > 0 || orQuicklists.length > 0) && (
+              <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-md">
+                <p className="text-sm text-blue-800">
+                  <strong>Active Filters:</strong>
+                  {andQuicklists.length > 0 && (
+                    <span className="block mt-1">
+                      AND: {andQuicklists.map(formatQuicklistName).join(', ')}
+                    </span>
+                  )}
+                  {orQuicklists.length > 0 && (
+                    <span className="block mt-1">
+                      OR: {orQuicklists.map(formatQuicklistName).join(', ')}
+                    </span>
+                  )}
+                </p>
+              </div>
+            )}
+          </>
         )}
+      </div>
+
+      {/* Property Classification */}
+      <PropertyClassificationFilters
+        filters={propertyClassificationFilters}
+        onChange={setPropertyClassificationFilters}
+      />
+
+      {/* Building Filters */}
+      <BuildingFilters
+        filters={buildingFilters}
+        onChange={setBuildingFilters}
+      />
+
+      {/* Assessment Filters */}
+      <AssessmentFilters
+        filters={assessmentFilters}
+        onChange={setAssessmentFilters}
+      />
+
+      {/* Demographic Filters */}
+      <DemographicFilters
+        filters={demographicFilters}
+        onChange={setDemographicFilters}
+      />
+
+      {/* Foreclosure Filters */}
+      <ForeclosureFilters
+        filters={foreclosureFilters}
+        onChange={setForeclosureFilters}
+      />
+
+      {/* Search Button */}
+      <div className="mt-6 mb-6">
+        <button
+          onClick={handleSearch}
+          disabled={loading}
+          className="w-full bg-indigo-600 text-white py-3 px-6 rounded-md hover:bg-indigo-700 transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center text-lg font-semibold shadow-lg"
+        >
+          {loading ? (
+            <>
+              <Loader2 className="animate-spin mr-2 h-6 w-6" />
+              Searching...
+            </>
+          ) : (
+            <>
+              <Search className="mr-2 h-6 w-6" />
+              Search Properties
+            </>
+          )}
+        </button>
       </div>
 
       {/* Results */}
