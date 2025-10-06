@@ -322,10 +322,10 @@ const PropertyListPage = ({ apiToken }) => {
               </div>
             )}
 
-            {/* MLS / Listing */}
+            {/* Listing */}
             {(property.mls || property.listing) && (
               <div className="mb-6">
-                <h3 className="text-lg font-semibold text-gray-800 mb-3 border-b pb-2">MLS / Listing</h3>
+                <h3 className="text-lg font-semibold text-gray-800 mb-3 border-b pb-2">Listing</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                   {Object.entries(property.mls || property.listing).map(([key, value]) => (
                     <div key={key} className="p-3 bg-gray-50 rounded-lg">

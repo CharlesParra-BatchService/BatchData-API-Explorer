@@ -15,13 +15,14 @@ The application uses a **Google-style navigation** pattern with:
 ### 1. Property Count Search
 - Search for properties by city and state
 - Display total property count for the location
+- Applies skip=0 and take=0 request options to only return property counts
 - **Filter by quicklists** - Apply property criteria filters:
   - **AND filters** - Properties must match ALL selected criteria
   - **OR filters** - Properties match ANY of the selected criteria
   - Support for 35+ property types including:
     - Owner-occupied properties
     - Vacant properties
-    - Active MLS listings
+    - Active listings
     - Out-of-state owners
     - Absentee owners
     - High equity properties
@@ -37,15 +38,16 @@ The application uses a **Google-style navigation** pattern with:
 
 ### 2. Property List
 - Browse paginated property results (50 properties per page)
+- Applies skip and take request options to implement paginated results
 - Search for properties by city and state
 - Click on any property to view detailed information in a modal
-- Navigate through large datasets with Previous/Next pagination controls
+- Navigate through large datasets withx Previous/Next pagination controls
 - View comprehensive property details including:
   - Address, general info, building, and lot details
   - Valuation, assessment, and tax information
   - Owner and sale information
   - Legal details and property IDs
-  - MLS/Listing data (if available)
+  - Listing data (if available)
   - Demographics information
 - **JSON Viewer** - View and copy request payload and API response
   - Toggle to show/hide JSON data
