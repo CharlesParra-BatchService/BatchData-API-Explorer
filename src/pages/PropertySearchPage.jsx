@@ -5,6 +5,15 @@ import BuildingFilters from '../components/BuildingFilters';
 import DemographicFilters from '../components/DemographicFilters';
 import ForeclosureFilters from '../components/ForeclosureFilters';
 import PropertyClassificationFilters from '../components/PropertyClassificationFilters';
+import IntelFilters from '../components/IntelFilters';
+import InvoluntaryLienFilters from '../components/InvoluntaryLienFilters';
+import LegalFilters from '../components/LegalFilters';
+import ListingFilters from '../components/ListingFilters';
+import LotFilters from '../components/LotFilters';
+import OpenLienFilters from '../components/OpenLienFilters';
+import OwnerFilters from '../components/OwnerFilters';
+import PermitFilters from '../components/PermitFilters';
+import SaleFilters from '../components/SaleFilters';
 
 const PropertySearchPage = ({ apiToken }) => {
   const [city, setCity] = useState('Phoenix');
@@ -30,6 +39,15 @@ const PropertySearchPage = ({ apiToken }) => {
   const [propertyClassificationFilters, setPropertyClassificationFilters] = useState({
     propertyTypeCategory: { inList: ['Residential'] }
   });
+  const [intelFilters, setIntelFilters] = useState({});
+  const [involuntaryLienFilters, setInvoluntaryLienFilters] = useState({});
+  const [legalFilters, setLegalFilters] = useState({});
+  const [listingFilters, setListingFilters] = useState({});
+  const [lotFilters, setLotFilters] = useState({});
+  const [openLienFilters, setOpenLienFilters] = useState({});
+  const [ownerFilters, setOwnerFilters] = useState({});
+  const [permitFilters, setPermitFilters] = useState({});
+  const [saleFilters, setSaleFilters] = useState({});
   const [quickFiltersExpanded, setQuickFiltersExpanded] = useState(true);
   const [assessmentFiltersExpanded, setAssessmentFiltersExpanded] = useState(true);
 
@@ -188,6 +206,311 @@ const PropertySearchPage = ({ apiToken }) => {
         }
       });
       requestBody.searchCriteria.foreclosure = processedForeclosureFilters;
+    }
+
+    // Merge intel filters
+    if (Object.keys(intelFilters).length > 0) {
+      const processedIntelFilters = {};
+      Object.entries(intelFilters).forEach(([category, values]) => {
+        processedIntelFilters[category] = {};
+
+        // Handle numeric min/max fields
+        if (values.min !== undefined) {
+          processedIntelFilters[category].min = Number(values.min);
+        }
+        if (values.max !== undefined) {
+          processedIntelFilters[category].max = Number(values.max);
+        }
+
+        // Handle date fields (minDate/maxDate)
+        if (values.minDate !== undefined) {
+          processedIntelFilters[category].minDate = values.minDate;
+        }
+        if (values.maxDate !== undefined) {
+          processedIntelFilters[category].maxDate = values.maxDate;
+        }
+      });
+      requestBody.searchCriteria.intel = processedIntelFilters;
+    }
+
+    // Merge involuntary lien filters
+    if (Object.keys(involuntaryLienFilters).length > 0) {
+      const processedInvoluntaryLienFilters = {};
+      Object.entries(involuntaryLienFilters).forEach(([category, values]) => {
+        processedInvoluntaryLienFilters[category] = {};
+
+        // Handle numeric min/max fields
+        if (values.min !== undefined) {
+          processedInvoluntaryLienFilters[category].min = Number(values.min);
+        }
+        if (values.max !== undefined) {
+          processedInvoluntaryLienFilters[category].max = Number(values.max);
+        }
+
+        // Handle date fields (minDate/maxDate)
+        if (values.minDate !== undefined) {
+          processedInvoluntaryLienFilters[category].minDate = values.minDate;
+        }
+        if (values.maxDate !== undefined) {
+          processedInvoluntaryLienFilters[category].maxDate = values.maxDate;
+        }
+
+        // Handle string fields (inList, etc.)
+        if (values.inList !== undefined) {
+          processedInvoluntaryLienFilters[category].inList = values.inList;
+        }
+      });
+      requestBody.searchCriteria.involuntaryLien = processedInvoluntaryLienFilters;
+    }
+
+    // Merge legal filters
+    if (Object.keys(legalFilters).length > 0) {
+      const processedLegalFilters = {};
+      Object.entries(legalFilters).forEach(([category, values]) => {
+        processedLegalFilters[category] = {};
+
+        // Handle string operator fields (equals, contains, startsWith, endsWith)
+        if (values.equals !== undefined) {
+          processedLegalFilters[category].equals = values.equals;
+        }
+        if (values.contains !== undefined) {
+          processedLegalFilters[category].contains = values.contains;
+        }
+        if (values.startsWith !== undefined) {
+          processedLegalFilters[category].startsWith = values.startsWith;
+        }
+        if (values.endsWith !== undefined) {
+          processedLegalFilters[category].endsWith = values.endsWith;
+        }
+      });
+      requestBody.searchCriteria.legal = processedLegalFilters;
+    }
+
+    // Merge listing filters
+    if (Object.keys(listingFilters).length > 0) {
+      const processedListingFilters = {};
+      Object.entries(listingFilters).forEach(([category, values]) => {
+        processedListingFilters[category] = {};
+
+        // Handle numeric min/max fields
+        if (values.min !== undefined) {
+          processedListingFilters[category].min = Number(values.min);
+        }
+        if (values.max !== undefined) {
+          processedListingFilters[category].max = Number(values.max);
+        }
+
+        // Handle date min/max fields
+        if (values.minDate !== undefined) {
+          processedListingFilters[category].minDate = values.minDate;
+        }
+        if (values.maxDate !== undefined) {
+          processedListingFilters[category].maxDate = values.maxDate;
+        }
+
+        // Handle string operator fields (contains only for description)
+        if (values.contains !== undefined) {
+          processedListingFilters[category].contains = values.contains;
+        }
+
+        // Handle inList fields (status, statusCategory)
+        if (values.inList !== undefined) {
+          processedListingFilters[category].inList = values.inList;
+        }
+      });
+      requestBody.searchCriteria.listing = processedListingFilters;
+    }
+
+    // Merge lot filters
+    if (Object.keys(lotFilters).length > 0) {
+      const processedLotFilters = {};
+      Object.entries(lotFilters).forEach(([category, values]) => {
+        processedLotFilters[category] = {};
+
+        // Handle numeric min/max fields
+        if (values.min !== undefined) {
+          processedLotFilters[category].min = Number(values.min);
+        }
+        if (values.max !== undefined) {
+          processedLotFilters[category].max = Number(values.max);
+        }
+
+        // Handle string operator fields (for zoningCode)
+        if (values.equals !== undefined) {
+          processedLotFilters[category].equals = values.equals;
+        }
+        if (values.contains !== undefined) {
+          processedLotFilters[category].contains = values.contains;
+        }
+        if (values.startsWith !== undefined) {
+          processedLotFilters[category].startsWith = values.startsWith;
+        }
+        if (values.endsWith !== undefined) {
+          processedLotFilters[category].endsWith = values.endsWith;
+        }
+      });
+      requestBody.searchCriteria.lot = processedLotFilters;
+    }
+
+    // Merge open lien filters
+    if (Object.keys(openLienFilters).length > 0) {
+      const processedOpenLienFilters = {};
+      Object.entries(openLienFilters).forEach(([category, values]) => {
+        processedOpenLienFilters[category] = {};
+
+        // Handle numeric min/max fields
+        if (values.min !== undefined) {
+          processedOpenLienFilters[category].min = Number(values.min);
+        }
+        if (values.max !== undefined) {
+          processedOpenLienFilters[category].max = Number(values.max);
+        }
+
+        // Handle date min/max fields
+        if (values.minDate !== undefined) {
+          processedOpenLienFilters[category].minDate = values.minDate;
+        }
+        if (values.maxDate !== undefined) {
+          processedOpenLienFilters[category].maxDate = values.maxDate;
+        }
+
+        // Handle string operator fields (for loan types)
+        if (values.equals !== undefined) {
+          processedOpenLienFilters[category].equals = values.equals;
+        }
+        if (values.contains !== undefined) {
+          processedOpenLienFilters[category].contains = values.contains;
+        }
+        if (values.startsWith !== undefined) {
+          processedOpenLienFilters[category].startsWith = values.startsWith;
+        }
+        if (values.endsWith !== undefined) {
+          processedOpenLienFilters[category].endsWith = values.endsWith;
+        }
+      });
+      requestBody.searchCriteria.openLien = processedOpenLienFilters;
+    }
+
+    // Merge owner filters
+    if (Object.keys(ownerFilters).length > 0) {
+      const processedOwnerFilters = {};
+      Object.entries(ownerFilters).forEach(([category, values]) => {
+        processedOwnerFilters[category] = {};
+
+        // Handle numeric min/max fields
+        if (values.min !== undefined) {
+          processedOwnerFilters[category].min = Number(values.min);
+        }
+        if (values.max !== undefined) {
+          processedOwnerFilters[category].max = Number(values.max);
+        }
+
+        // Handle date min/max fields
+        if (values.minDate !== undefined) {
+          processedOwnerFilters[category].minDate = values.minDate;
+        }
+        if (values.maxDate !== undefined) {
+          processedOwnerFilters[category].maxDate = values.maxDate;
+        }
+
+        // Handle boolean equals field
+        if (values.equals !== undefined && typeof values.equals === 'boolean') {
+          processedOwnerFilters[category].equals = values.equals;
+        }
+
+        // Handle string operator fields (for text fields)
+        if (values.equals !== undefined && typeof values.equals === 'string') {
+          processedOwnerFilters[category].equals = values.equals;
+        }
+        if (values.contains !== undefined) {
+          processedOwnerFilters[category].contains = values.contains;
+        }
+        if (values.startsWith !== undefined) {
+          processedOwnerFilters[category].startsWith = values.startsWith;
+        }
+        if (values.endsWith !== undefined) {
+          processedOwnerFilters[category].endsWith = values.endsWith;
+        }
+      });
+      requestBody.searchCriteria.owner = processedOwnerFilters;
+    }
+
+    // Merge permit filters
+    if (Object.keys(permitFilters).length > 0) {
+      const processedPermitFilters = {};
+      Object.entries(permitFilters).forEach(([category, values]) => {
+        processedPermitFilters[category] = {};
+
+        // Handle numeric min/max fields
+        if (values.min !== undefined) {
+          processedPermitFilters[category].min = Number(values.min);
+        }
+        if (values.max !== undefined) {
+          processedPermitFilters[category].max = Number(values.max);
+        }
+
+        // Handle date min/max fields
+        if (values.minDate !== undefined) {
+          processedPermitFilters[category].minDate = values.minDate;
+        }
+        if (values.maxDate !== undefined) {
+          processedPermitFilters[category].maxDate = values.maxDate;
+        }
+
+        // Handle string operator fields (for allTags)
+        if (values.equals !== undefined) {
+          processedPermitFilters[category].equals = values.equals;
+        }
+        if (values.contains !== undefined) {
+          processedPermitFilters[category].contains = values.contains;
+        }
+        if (values.startsWith !== undefined) {
+          processedPermitFilters[category].startsWith = values.startsWith;
+        }
+        if (values.endsWith !== undefined) {
+          processedPermitFilters[category].endsWith = values.endsWith;
+        }
+      });
+      requestBody.searchCriteria.permit = processedPermitFilters;
+    }
+
+    // Merge sale filters
+    if (Object.keys(saleFilters).length > 0) {
+      const processedSaleFilters = {};
+      Object.entries(saleFilters).forEach(([category, values]) => {
+        processedSaleFilters[category] = {};
+
+        // Handle numeric min/max fields
+        if (values.min !== undefined) {
+          processedSaleFilters[category].min = Number(values.min);
+        }
+        if (values.max !== undefined) {
+          processedSaleFilters[category].max = Number(values.max);
+        }
+
+        // Handle date min/max fields
+        if (values.minDate !== undefined) {
+          processedSaleFilters[category].minDate = values.minDate;
+        }
+        if (values.maxDate !== undefined) {
+          processedSaleFilters[category].maxDate = values.maxDate;
+        }
+
+        // Handle string operator fields (for lastSaleDocumentType)
+        if (values.equals !== undefined) {
+          processedSaleFilters[category].equals = values.equals;
+        }
+        if (values.contains !== undefined) {
+          processedSaleFilters[category].contains = values.contains;
+        }
+        if (values.startsWith !== undefined) {
+          processedSaleFilters[category].startsWith = values.startsWith;
+        }
+        if (values.endsWith !== undefined) {
+          processedSaleFilters[category].endsWith = values.endsWith;
+        }
+      });
+      requestBody.searchCriteria.sale = processedSaleFilters;
     }
 
     // Parse and merge additional JSON criteria
@@ -500,6 +823,60 @@ const PropertySearchPage = ({ apiToken }) => {
       <ForeclosureFilters
         filters={foreclosureFilters}
         onChange={setForeclosureFilters}
+      />
+
+      {/* Intel Filters */}
+      <IntelFilters
+        filters={intelFilters}
+        onChange={setIntelFilters}
+      />
+
+      {/* Involuntary Lien Filters */}
+      <InvoluntaryLienFilters
+        filters={involuntaryLienFilters}
+        onChange={setInvoluntaryLienFilters}
+      />
+
+      {/* Legal Filters */}
+      <LegalFilters
+        filters={legalFilters}
+        onChange={setLegalFilters}
+      />
+
+      {/* Listing Filters */}
+      <ListingFilters
+        filters={listingFilters}
+        onChange={setListingFilters}
+      />
+
+      {/* Lot Filters */}
+      <LotFilters
+        filters={lotFilters}
+        onChange={setLotFilters}
+      />
+
+      {/* Open Lien Filters */}
+      <OpenLienFilters
+        filters={openLienFilters}
+        onChange={setOpenLienFilters}
+      />
+
+      {/* Owner Filters */}
+      <OwnerFilters
+        filters={ownerFilters}
+        onChange={setOwnerFilters}
+      />
+
+      {/* Permit Filters */}
+      <PermitFilters
+        filters={permitFilters}
+        onChange={setPermitFilters}
+      />
+
+      {/* Sale Filters */}
+      <SaleFilters
+        filters={saleFilters}
+        onChange={setSaleFilters}
       />
 
       {/* Search Button */}
