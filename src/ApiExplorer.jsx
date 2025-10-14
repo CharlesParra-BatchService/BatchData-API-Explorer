@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { Search, Home, Menu, X, Building2, Users, Key, List } from 'lucide-react';
+import { Search, Home, Menu, X, Building2, Users, Key, List, TrendingUp } from 'lucide-react';
 import PropertySearchPage from './pages/PropertySearchPage';
 import PropertyLookupPage from './pages/PropertyLookupPage';
 import SkipTracePage from './pages/SkipTracePage';
 import PropertyListPage from './pages/PropertyListPage';
+import PropertyComparablesPage from './pages/PropertyComparablesPage';
 
 const ApiExplorer = () => {
   const [currentPage, setCurrentPage] = useState('property-search');
@@ -15,6 +16,7 @@ const ApiExplorer = () => {
     { id: 'property-search', name: 'Property Count Search', icon: Search },
     { id: 'property-list', name: 'Property List', icon: List },
     { id: 'property-lookup', name: 'Property Lookup', icon: Building2 },
+    { id: 'property-comparables', name: 'Property Comparables', icon: TrendingUp },
     { id: 'skip-trace', name: 'Skip Trace', icon: Users }
   ];
 
@@ -33,6 +35,8 @@ const ApiExplorer = () => {
         return <PropertyListPage apiToken={apiToken} />;
       case 'property-lookup':
         return <PropertyLookupPage apiToken={apiToken} />;
+      case 'property-comparables':
+        return <PropertyComparablesPage apiToken={apiToken} />;
       case 'skip-trace':
         return <SkipTracePage apiToken={apiToken} />;
       default:

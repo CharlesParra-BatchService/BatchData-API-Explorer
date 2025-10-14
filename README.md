@@ -83,6 +83,39 @@ The application uses a **Google-style navigation** pattern with:
   - Toggle to show/hide JSON data
   - One-click copy to clipboard
 
+### 5. Property Comparables Search
+- Find comparable properties based on a subject property address
+- Enter subject property address (street, city, state, ZIP)
+- Browse paginated results (50 properties per page)
+- **Quick Filters** - Apply property criteria filters:
+  - **AND filters** - Properties must match ALL selected criteria
+  - **OR filters** - Properties match ANY of the selected criteria
+  - Support for 35+ property types (vacant, high-equity, active-listing, etc.)
+- **Property Classification Filters** - Filter by property type categories:
+  - Property Type Category (Residential, Commercial, Land, etc.)
+  - Defaults to "Residential" properties
+- **OR Criteria** - Filter by listing status OR last sale date:
+  - **Listing Status** - Active, Sold, or Pending (select multiple)
+  - **Last Sale Date Range** - Filter by when property was last sold
+  - Properties matching either criteria will be included
+- **Comparable Search Options** - Refine comparable matches with delta-based filters:
+  - **Distance** - Maximum distance from subject property (miles, yards, feet, kilometers, meters)
+  - **Bedrooms** - Delta from subject property (e.g., -1 to +2 bedrooms)
+  - **Bathrooms** - Delta from subject property (e.g., -0.5 to +1 bathrooms)
+  - **Stories** - Delta from subject property (e.g., -1 to +1 stories)
+  - **Living Area** - Percentage delta from subject property (e.g., -20% to +20%)
+  - **Year Built** - Delta from subject property (e.g., -10 to +5 years)
+  - **Lot Size** - Percentage delta from subject property (e.g., -30% to +30%)
+- **Aggregate Metrics** - View summary statistics for comparable properties:
+  - Average Price across all comparables
+  - Average Price per Square Foot
+  - Estimated Value for the subject property
+- Click on any property to view detailed information in a modal
+- Navigate through results with Previous/Next pagination controls
+- **JSON Viewer** - View and copy request payload and API response
+  - Toggle to show/hide JSON data
+  - One-click copy to clipboard
+
 ### General Features
 - Responsive design with Tailwind CSS
 - Clean, user-friendly interface
@@ -150,6 +183,7 @@ npm run preview
   - **Property List**
   - **Property Lookup**
   - **Skip Trace**
+  - **Property Comparables**
 
 ### Property Count Search
 1. The app defaults to "Phoenix, AZ" for quick testing
@@ -229,6 +263,56 @@ npm run preview
    - Copy request payload or response to clipboard with one click
 7. Click "View API Documentation" at the bottom to see full API docs
 
+### Property Comparables Search
+1. **Quick Test**: Click the green "Quick Test" button to auto-fill with a sample subject address (622 W Palmaire Ave, Phoenix, AZ)
+2. Or fill in the subject property address manually:
+   - Street Address (required)
+   - City (required)
+   - State (required)
+   - ZIP Code (required)
+3. **Optional: Apply Quick Filters**
+   - Expand the "Quick Filters" section
+   - Click buttons in the **"Must Match ALL (AND)"** section to require properties to match all selected criteria
+   - Click buttons in the **"Match ANY (OR)"** section to find properties matching any of the selected criteria
+   - Selected filters are highlighted (blue for AND, purple for OR)
+   - Use "Clear All" to remove all filters
+4. **Optional: Configure Property Classification**
+   - Expand the "Property Classification" section
+   - Select property type categories to filter by (default: Residential)
+5. **Optional: Enable OR Criteria (Listing Status & Last Sale Date)**
+   - Check "OR Criteria - Listing Status & Last Sale Date" to enable
+   - Select one or more listing statuses (Active, Sold, Pending)
+   - Optionally set a last sale date range (from date and/or to date)
+   - Properties matching either the listing status OR the sale date range will be included
+6. **Optional: Configure Comparable Search Options**
+   - Expand the "Comparable Search Options" section
+   - Enable and configure any of the following filters:
+     - **Distance**: Set maximum distance from subject property
+     - **Bedrooms**: Set min/max bedroom delta (e.g., -1 to +2)
+     - **Bathrooms**: Set min/max bathroom delta (e.g., -0.5 to +1)
+     - **Stories**: Set min/max story delta (e.g., -1 to +1)
+     - **Living Area**: Set min/max percentage delta (e.g., -20% to +20%)
+     - **Year Built**: Set min/max year delta (e.g., -10 to +5 years)
+     - **Lot Size**: Set min/max lot size percentage delta (e.g., -30% to +30%)
+   - Check "Include Aggregate Metrics" to see summary statistics
+7. Click "Find Comparables"
+8. View the results:
+   - **Aggregate Metrics** (if requested) showing average price, price per sqft, and estimated value
+   - **Property table** with comparable addresses (50 properties per page)
+   - **Pagination controls** showing current page and total count
+   - Click any property row to open detailed modal view
+9. **Navigate between pages**:
+   - Use Previous/Next buttons to browse through results
+   - Page indicator shows current page and total pages
+10. **View property details**:
+    - Click any property to open detailed modal
+    - View all available property information organized by category
+    - Close modal to return to the list
+11. **Optional: View API details**
+    - Click "View Request & Response JSON" to see the raw API data
+    - Copy request payload or response to clipboard with one click
+12. Click "View API Documentation" at the bottom to see full API docs
+
 ## Technology Stack
 
 - React 18
@@ -263,6 +347,31 @@ npm run preview
   - **APN**: Requires apn, county, and state
 - Billing: Each matched result counts as a billable request
 
+### Property Comparables API
+- Endpoint: `https://api.batchdata.com/api/v1/property/search`
+- Returns comparable properties based on a subject property address
+- **Request structure**:
+  - `searchCriteria.compAddress` - Subject property address (street, city, state, zip)
+  - `searchCriteria.quickLists` - Array of quicklists that must ALL match (AND logic)
+  - `searchCriteria.orQuickLists` - Array of quicklists where ANY can match (OR logic)
+  - `searchCriteria.general` - Property classification filters (e.g., propertyTypeCategory)
+  - `searchCriteria.or` - Array of OR criteria objects (separate objects for listing status and last sold date)
+    - Example: `[{"listing":{"status":{"inList":["Active","Pending"]}}},{"intel":{"lastSoldDate":{"minDate":"2023-04-27","maxDate":"2024-04-27"}}}]`
+  - `options.skip` and `options.take` - Pagination controls
+  - `options.aggComparablesMetrics` - Boolean to include aggregate metrics
+- **Comparable options** (all in `options` object):
+  - `useDistance` with distance value in various units (distanceMiles, distanceYards, distanceFeet, distanceKilometers, distanceMeters)
+  - `useBedrooms` with `minBedrooms` and `maxBedrooms` (delta values)
+  - `useBathrooms` with `minBathrooms` and `maxBathrooms` (delta values)
+  - `useStories` with `minStories` and `maxStories` (delta values)
+  - `useArea` with `minAreaPercent` and `maxAreaPercent` (percentage delta)
+  - `useYearBuilt` with `minYearBuilt` and `maxYearBuilt` (year delta)
+  - `useLotSize` with `minLotSizePercent` and `maxLotSizePercent` (percentage delta)
+- **Response structure**:
+  - `results.properties` - Array of comparable property objects
+  - `results.meta.results.resultsFound` - Total count of comparables
+  - `results.meta.results.aggComparablesMetrics` - Aggregate statistics (averagePrice, averagePricePerSqft, estimatedValue)
+
 ## How Quicklist Filtering Works
 
 ### AND Filtering (quickLists)
@@ -290,12 +399,28 @@ Returns: Vacant properties with high equity that are owned by either out-of-stat
 BatchData-API-Explorer/
 ├── src/
 │   ├── pages/
-│   │   ├── PropertySearchPage.jsx    # Property Count Search feature
-│   │   ├── PropertyListPage.jsx      # Property List feature
-│   │   ├── PropertyLookupPage.jsx    # Property Lookup feature
-│   │   └── SkipTracePage.jsx         # Skip Trace feature
-│   ├── main.jsx                       # App entry point
-│   └── ApiExplorer.jsx                # Main app with navigation & API key prompt
+│   │   ├── PropertySearchPage.jsx       # Property Count Search feature
+│   │   ├── PropertyListPage.jsx         # Property List feature
+│   │   ├── PropertyLookupPage.jsx       # Property Lookup feature
+│   │   ├── SkipTracePage.jsx            # Skip Trace feature
+│   │   └── PropertyComparablesPage.jsx  # Property Comparables feature
+│   ├── components/
+│   │   ├── AssessmentFilters.jsx
+│   │   ├── BuildingFilters.jsx
+│   │   ├── DemographicFilters.jsx
+│   │   ├── ForeclosureFilters.jsx
+│   │   ├── PropertyClassificationFilters.jsx
+│   │   ├── IntelFilters.jsx
+│   │   ├── InvoluntaryLienFilters.jsx
+│   │   ├── LegalFilters.jsx
+│   │   ├── ListingFilters.jsx
+│   │   ├── LotFilters.jsx
+│   │   ├── OpenLienFilters.jsx
+│   │   ├── OwnerFilters.jsx
+│   │   ├── PermitFilters.jsx
+│   │   └── SaleFilters.jsx
+│   ├── main.jsx                         # App entry point
+│   └── ApiExplorer.jsx                  # Main app with navigation & API key prompt
 ├── index.html
 ├── package.json
 └── README.md

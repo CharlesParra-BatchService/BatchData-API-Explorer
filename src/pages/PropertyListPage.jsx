@@ -124,8 +124,10 @@ const PropertyListPage = ({ apiToken }) => {
         searchCriteria: {
           query: `${formData.city}, ${formData.state}`
         },
-        skip: skip,
-        take: PROPERTIES_PER_PAGE
+        options: {
+          skip: skip,
+          take: PROPERTIES_PER_PAGE
+        }
       };
 
       if (andQuicklists.length > 0) {
