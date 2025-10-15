@@ -121,6 +121,45 @@ The application uses a **Google-style navigation** pattern with:
 - Clean, user-friendly interface
 - Mobile-friendly navigation with hamburger menu
 
+## Data Formatting
+
+The application applies intelligent formatting to property data fields based on their names and types:
+
+### Number Formatting
+All numeric values (except years and currency) are formatted with comma separators for readability:
+- **Example**: `1234567` displays as `1,234,567`
+- **Applies to**: Square footage, counts, scores, confidence values, etc.
+
+### Currency Formatting
+Fields containing monetary values are formatted as US currency:
+- **Example**: `250000` displays as `$250,000`
+- **Currency fields include**: Fields with names containing:
+  - `value`, `price`, `amount`, `cost`, `fee`, `tax`, `assessment`, `equity`, `balance`, `payment`
+
+### Non-Currency Numeric Fields
+The following fields are formatted with commas but NOT as currency:
+- **Area/Size fields**: Any field containing `squarefeet`, `area`, or `size`
+  - Examples: `totalBuildingAreaSquareFeet`, `livingAreaSquareFeet`, `lotSizeSquareFeet`
+  - Display: `1,234` (not `$1,234`)
+- **Statistical fields**: Fields containing `score`, `confidence`, `deviation`, `percent`, `rate`, or `ratio`
+  - Examples: `confidenceScore`, `standardDeviation`
+  - Display: `1,234` (not `$1,234`)
+
+### Year Fields
+Fields representing years are displayed as plain numbers without formatting:
+- **Example**: `2020` displays as `2020` (not `2,020`)
+- **Year fields include**: Any field containing `year` in the name
+  - Examples: `effectiveYearBuilt`, `marketValueYear`, `taxYear`
+
+### Date Formatting
+All property-related API requests use `dateFormat: "iso-date"` to return dates without time components:
+- **Example**: `2024-05-13` instead of `2024-05-13T00:00:00.000Z`
+
+### Image URLs
+Image URL fields are completely excluded from display for privacy and cleanliness:
+- **Hidden fields**: Any field with `url` in the name
+- **Visible fields**: `imageCount` and other non-URL image metadata
+
 ## Prerequisites
 
 - Node.js (v16 or higher)

@@ -89,7 +89,8 @@ const PropertySearchPage = ({ apiToken }) => {
       options: {
         skip: 0,
         take: 0,
-        quicklistCounts: true
+        quicklistCounts: true,
+        dateFormat: "iso-date"
       }
     };
 

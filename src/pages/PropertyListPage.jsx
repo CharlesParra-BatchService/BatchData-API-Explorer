@@ -126,7 +126,8 @@ const PropertyListPage = ({ apiToken }) => {
         },
         options: {
           skip: skip,
-          take: PROPERTIES_PER_PAGE
+          take: PROPERTIES_PER_PAGE,
+          dateFormat: "iso-date"
         }
       };
 
@@ -548,6 +549,9 @@ const PropertyListPage = ({ apiToken }) => {
       return JSON.stringify(value, null, 2);
     }
     if (typeof value === 'boolean') return value ? 'Yes' : 'No';
+    if (typeof value === 'number') {
+      return new Intl.NumberFormat('en-US').format(value);
+    }
     return String(value);
   };
 
@@ -565,8 +569,21 @@ const PropertyListPage = ({ apiToken }) => {
     return new Intl.NumberFormat('en-US').format(value);
   };
 
+  // Helper function to determine if a field should be formatted as currency
+  const isCurrencyField = (fieldName) => {
+    const lowerFieldName = fieldName.toLowerCase();
+    // Fields that should NOT be formatted as currency
+    const nonCurrencyFields = ['score', 'confidence', 'deviation', 'percent', 'rate', 'ratio', 'squarefeet', 'area', 'size', 'year'];
+    if (nonCurrencyFields.some(field => lowerFieldName.includes(field))) {
+      return false;
+    }
+    // Fields that should be formatted as currency
+    const currencyFields = ['value', 'price', 'amount', 'cost', 'fee', 'tax', 'assessment', 'equity', 'balance', 'payment'];
+    return currencyFields.some(field => lowerFieldName.includes(field));
+  };
+
   // Helper component to safely render any value
-  const ValueDisplay = ({ value, isCurrency = false }) => {
+  const ValueDisplay = ({ value, isCurrency = false, fieldName = '' }) => {
     if (value === null || value === undefined || value === '') {
       return <span className="font-medium text-gray-800">N/A</span>;
     }
@@ -576,8 +593,14 @@ const PropertyListPage = ({ apiToken }) => {
     if (typeof value === 'boolean') {
       return <span className="font-medium text-gray-800">{value ? 'Yes' : 'No'}</span>;
     }
-    if (isCurrency && typeof value === 'number') {
+    // Check if field should be currency based on field name
+    const shouldBeCurrency = isCurrency || (fieldName && isCurrencyField(fieldName));
+    if (shouldBeCurrency && typeof value === 'number') {
       return <span className="font-medium text-gray-800">{formatCurrency(value)}</span>;
+    }
+    // Don't format numbers if the field is a year
+    if (typeof value === 'number' && !fieldName.toLowerCase().includes('year')) {
+      return <span className="font-medium text-gray-800">{formatNumber(value)}</span>;
     }
     return <span className="font-medium text-gray-800">{String(value)}</span>;
   };
@@ -623,7 +646,7 @@ const PropertyListPage = ({ apiToken }) => {
                   {Object.entries(property.general).map(([key, value]) => (
                     <div key={key} className="p-3 bg-gray-50 rounded-lg">
                       <span className="text-xs text-gray-500 block">{key}</span>
-                      <ValueDisplay value={value} />
+                      <ValueDisplay value={value} fieldName={key} />
                     </div>
                   ))}
                 </div>
@@ -638,7 +661,7 @@ const PropertyListPage = ({ apiToken }) => {
                   {Object.entries(property.building).map(([key, value]) => (
                     <div key={key} className="p-3 bg-gray-50 rounded-lg">
                       <span className="text-xs text-gray-500 block">{key}</span>
-                      <ValueDisplay value={value} />
+                      <ValueDisplay value={value} fieldName={key} />
                     </div>
                   ))}
                 </div>
@@ -653,7 +676,7 @@ const PropertyListPage = ({ apiToken }) => {
                   {Object.entries(property.lot).map(([key, value]) => (
                     <div key={key} className="p-3 bg-gray-50 rounded-lg">
                       <span className="text-xs text-gray-500 block">{key}</span>
-                      <ValueDisplay value={value} />
+                      <ValueDisplay value={value} fieldName={key} />
                     </div>
                   ))}
                 </div>
@@ -668,7 +691,7 @@ const PropertyListPage = ({ apiToken }) => {
                   {Object.entries(property.valuation).map(([key, value]) => (
                     <div key={key} className="p-3 bg-gray-50 rounded-lg">
                       <span className="text-xs text-gray-500 block">{key}</span>
-                      <ValueDisplay value={value} isCurrency={typeof value === 'number'} />
+                      <ValueDisplay value={value} fieldName={key} />
                     </div>
                   ))}
                 </div>
@@ -683,7 +706,7 @@ const PropertyListPage = ({ apiToken }) => {
                   {Object.entries(property.assessment).map(([key, value]) => (
                     <div key={key} className="p-3 bg-gray-50 rounded-lg">
                       <span className="text-xs text-gray-500 block">{key}</span>
-                      <ValueDisplay value={value} isCurrency={typeof value === 'number'} />
+                      <ValueDisplay value={value} fieldName={key} />
                     </div>
                   ))}
                 </div>
@@ -698,7 +721,7 @@ const PropertyListPage = ({ apiToken }) => {
                   {Object.entries(property.tax).map(([key, value]) => (
                     <div key={key} className="p-3 bg-gray-50 rounded-lg">
                       <span className="text-xs text-gray-500 block">{key}</span>
-                      <ValueDisplay value={value} isCurrency={typeof value === 'number'} />
+                      <ValueDisplay value={value} fieldName={key} />
                     </div>
                   ))}
                 </div>
@@ -713,7 +736,7 @@ const PropertyListPage = ({ apiToken }) => {
                   {Object.entries(property.owner).map(([key, value]) => (
                     <div key={key} className="p-3 bg-gray-50 rounded-lg">
                       <span className="text-xs text-gray-500 block">{key}</span>
-                      <ValueDisplay value={value} />
+                      <ValueDisplay value={value} fieldName={key} />
                     </div>
                   ))}
                 </div>
@@ -728,7 +751,7 @@ const PropertyListPage = ({ apiToken }) => {
                   {Object.entries(property.sale).map(([key, value]) => (
                     <div key={key} className="p-3 bg-gray-50 rounded-lg">
                       <span className="text-xs text-gray-500 block">{key}</span>
-                      <ValueDisplay value={value} isCurrency={key.toLowerCase().includes('price') || key.toLowerCase().includes('amount')} />
+                      <ValueDisplay value={value} isCurrency={key.toLowerCase().includes('price') || key.toLowerCase().includes('amount')} fieldName={key} />
                     </div>
                   ))}
                 </div>
@@ -743,7 +766,7 @@ const PropertyListPage = ({ apiToken }) => {
                   {Object.entries(property.legal).map(([key, value]) => (
                     <div key={key} className="p-3 bg-gray-50 rounded-lg">
                       <span className="text-xs text-gray-500 block">{key}</span>
-                      <ValueDisplay value={value} />
+                      <ValueDisplay value={value} fieldName={key} />
                     </div>
                   ))}
                 </div>
@@ -758,7 +781,7 @@ const PropertyListPage = ({ apiToken }) => {
                   {Object.entries(property.ids).map(([key, value]) => (
                     <div key={key} className="p-3 bg-gray-50 rounded-lg">
                       <span className="text-xs text-gray-500 block">{key}</span>
-                      <ValueDisplay value={value} />
+                      <ValueDisplay value={value} fieldName={key} />
                     </div>
                   ))}
                 </div>
@@ -773,7 +796,7 @@ const PropertyListPage = ({ apiToken }) => {
                   {Object.entries(property.mls || property.listing).map(([key, value]) => (
                     <div key={key} className="p-3 bg-gray-50 rounded-lg">
                       <span className="text-xs text-gray-500 block">{key}</span>
-                      <ValueDisplay value={value} isCurrency={key.toLowerCase().includes('price') || key.toLowerCase().includes('amount')} />
+                      <ValueDisplay value={value} isCurrency={key.toLowerCase().includes('price') || key.toLowerCase().includes('amount')} fieldName={key} />
                     </div>
                   ))}
                 </div>
@@ -788,9 +811,26 @@ const PropertyListPage = ({ apiToken }) => {
                   {Object.entries(property.demographics).map(([key, value]) => (
                     <div key={key} className="p-3 bg-gray-50 rounded-lg">
                       <span className="text-xs text-gray-500 block">{key}</span>
-                      <ValueDisplay value={value} isCurrency={key.toLowerCase().includes('income') || key.toLowerCase().includes('worth')} />
+                      <ValueDisplay value={value} isCurrency={key.toLowerCase().includes('income') || key.toLowerCase().includes('worth')} fieldName={key} />
                     </div>
                   ))}
+                </div>
+              </div>
+            )}
+
+            {/* Images */}
+            {property.images && (
+              <div className="mb-6">
+                <h3 className="text-lg font-semibold text-gray-800 mb-3 border-b pb-2">Images</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                  {Object.entries(property.images)
+                    .filter(([key]) => !key.toLowerCase().includes('url'))
+                    .map(([key, value]) => (
+                      <div key={key} className="p-3 bg-gray-50 rounded-lg">
+                        <span className="text-xs text-gray-500 block">{key}</span>
+                        <ValueDisplay value={value} fieldName={key} />
+                      </div>
+                    ))}
                 </div>
               </div>
             )}

@@ -70,7 +70,10 @@ const SkipTracePage = ({ apiToken }) => {
               county: county.trim(),
               state: apnState.trim()
             }
-      ]
+      ],
+      options: {
+        dateFormat: "iso-date"
+      }
     };
 
     try {
@@ -144,6 +147,9 @@ const SkipTracePage = ({ apiToken }) => {
   const formatValue = (value) => {
     if (value === null || value === undefined || value === '') return 'N/A';
     if (typeof value === 'object') return JSON.stringify(value, null, 2);
+    if (typeof value === 'number') {
+      return new Intl.NumberFormat('en-US').format(value);
+    }
     return String(value);
   };
 
